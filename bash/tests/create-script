@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+[[ $# -ne 1 ]] && echo "Type only the name of your script! Exiting..." && 
+exit 1
+
+[[ -f $1 ]] && echo "File already exists! Exiting..." && exit 1
+
+echo '#!/usr/bin/env bash' >> $1
+chmod +x $1
+nano $1
