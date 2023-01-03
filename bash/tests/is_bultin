@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+msg="You must type a valid command"
+
+[[ $# -ne 1 ]] && echo $msg && exit 1
+
+help $1 &> /dev/null
+
+[[ $? -eq 0 ]] && echo "$1 is a shell bultin!" || echo "$1 is not a shell bultin!"
+
+exit 0
