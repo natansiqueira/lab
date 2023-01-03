@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo "- My PID is: $$"
+exit 0
