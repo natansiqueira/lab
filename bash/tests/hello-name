@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+hello() {
+  echo "hello, i'm $1"
+}
+
+echo $(hello $1)
