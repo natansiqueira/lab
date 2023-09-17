@@ -12,14 +12,14 @@ _have() {
 ! _have fzf && echo "→ fzf required" && exit 1
 
 new() {
-	touch TODO_FILE
-	echo "[ ] - $1" >>$TODO_FILE
+	echo "→ $*" >>$TODO_FILE
 }
 
 list() {
 	if [ "$1" = "all" ]; then
 		cat $TODO_FILE
 	else
+		[[ $(cat $TODO_FILE | grep "→" | wc -l | xargs) -eq 0 ]] && echo '→ no entries' && exit 0
 		cat $TODO_FILE | grep "→"
 	fi
 }
@@ -43,20 +43,20 @@ help() {
 }
 
 case "$1" in
-n | new)
-	new "$2"
-	exit
-	;;
-l | list)
-	list "$2"
-	exit
-	;;
-c | complete)
-	complete
-	exit
-	;;
-*)
-	help
-	exit
-	;;
+  n | new)
+    new "${@:2}"
+    exit
+    ;;
+  l | list)
+    list "$2"
+    exit
+    ;;
+  c | complete)
+    complete
+    exit
+    ;;
+  *)
+    help
+    exit
+    ;;
 esac
