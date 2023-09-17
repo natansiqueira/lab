@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # consts
-TODO_FILE=".todos"
+TODO_DIR="$HOME/.local/share/todo"
+TODO_FILE="$TODO_DIR/todos"
 
 # utils
 _have() {
@@ -10,6 +11,7 @@ _have() {
 
 # dependencies
 ! _have fzf && echo "→ fzf required" && exit 1
+! [[ -d $TODO_DIR ]] && mkdir -p $TODO_DIR && touch $TODO_FILE && echo "→ todo list started ($TODO_FILE)"
 
 new() {
 	echo "→ $*" >>$TODO_FILE
@@ -33,30 +35,31 @@ complete() {
 help() {
 	echo "todo - simple todo"
 	echo
-	echo "Syntax: zet -[n|new|l|list|c|complete|h]"
+	echo "Syntax: zet -[n|new|l|list|c|completed|h]"
 	echo "options:"
 	echo "n | new [title] new todo entry"
-	echo "l | list        list todos"
-	echo "          all   list all"
+	echo "l | list        list active tasks"
+	echo "          all   list tasks including completed"
+	echo "c | completed   mark todo as completed"
 	echo "h | help        print this help"
 	echo
 }
 
 case "$1" in
-  n | new)
-    new "${@:2}"
-    exit
-    ;;
-  l | list)
-    list "$2"
-    exit
-    ;;
-  c | complete)
-    complete
-    exit
-    ;;
-  *)
-    help
-    exit
-    ;;
+n | new)
+	new "${@:2}"
+	exit
+	;;
+l | list)
+	list "$2"
+	exit
+	;;
+c | complete)
+	complete
+	exit
+	;;
+*)
+	help
+	exit
+	;;
 esac
