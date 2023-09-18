@@ -1,0 +1,15 @@
+services:
+  ruby:
+    image: ruby
+    working_dir: /app
+    volumes:
+      - .:/app
+      - rubygems:/usr/local/bundle
+  python:
+    image: python
+    working_dir: /app
+    volumes:
+      - .:/app
+
+volumes:
+  rubygems:

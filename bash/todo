@@ -11,38 +11,39 @@ _have() {
 
 # dependencies
 ! _have fzf && echo "→ fzf required" && exit 1
-! [[ -d $TODO_DIR ]] && mkdir -p $TODO_DIR && touch $TODO_FILE && echo "→ todo list started ($TODO_FILE)"
+! [[ -d "$TODO_FILE" ]] && mkdir -p "$TODO_DIR" && \
+touch "$TODO_FILE" && echo "→ todo list started ($TODO_FILE)"
 
 new() {
-    echo "→ $*" >>$TODO_FILE
+    echo "→ $*" >>"$TODO_FILE"
     echo "✓ task added"
 }
 
 list() {
     if [ "$1" = "all" ]; then
-        [[ $(cat $TODO_FILE | wc -l | xargs) -eq 0 ]] && echo '→ no entries' && exit 0
-        cat $TODO_FILE
-        echo "total items $(cat $TODO_FILE | wc -l | xargs)"
+        [[ $(wc -l < "$TODO_FILE" | xargs) -eq 0 ]] && echo '→ no entries' && exit 0
+        cat "$TODO_FILE"
+        echo "total items $(wc -l < "$TODO_FILE" | xargs)"
     else
-        tasks=$(cat $TODO_FILE | grep "→" | wc -l | xargs)
+        tasks=$(grep -c "→" < "$TODO_FILE")
         [[ $tasks -eq 0 ]] && echo '→ no entries' && exit 0
-        cat $TODO_FILE | grep "→"
+        grep "→" < "$TODO_FILE"
         echo "total items $tasks"
     fi
 }
 
 completed() {
-    task=$(cat $TODO_FILE | fzf --height=15 --border --reverse -e -i --tiebreak=begin --prompt='Task: ')
-    ! [[ -n $task ]] && echo '→ operation cancelled' && exit 1
+    task=$(fzf --height=15 --border --reverse -e -i --tiebreak=begin --prompt='Task: ' < "$TODO_FILE")
+    [[ -z $task ]] && echo '→ operation cancelled' && exit 1
     replacement=$(echo "$task" | gsed 's/→/✓/')
     gsed -i "s/$task/$replacement/" "$TODO_FILE"
     echo "✓ $task mark as completed"
 }
 
 delete() {
-    [[ $(cat $TODO_FILE | wc -l | xargs) -eq 0 ]] && echo '→ no entries' && exit 0
-    task=$(cat $TODO_FILE | fzf --height=15 --border --reverse -e -i --tiebreak=begin --prompt='Task: ')
-    ! [[ -n $task ]] && echo '→ operation cancelled' && exit 1
+    [[ $(wc -l < "$TODO_FILE"| xargs) -eq 0 ]] && echo '→ no entries' && exit 0
+    task=$(fzf --height=15 --border --reverse -e -i --tiebreak=begin --prompt='Task: ' < "$TODO_FILE" )
+    [[ -z $task ]] && echo '→ operation cancelled' && exit 1
     gsed -i "/$task/d" "$TODO_FILE"
     echo "✓ task deleted"
 }
