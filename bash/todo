@@ -12,7 +12,7 @@ _have() {
 # dependencies
 ! _have fzf && echo "→ fzf required" && exit 1
 ! [[ -d "$TODO_FILE" ]] && mkdir -p "$TODO_DIR" && \
-touch "$TODO_FILE" && echo "→ todo list started ($TODO_FILE)"
+! [[ -f "$TODO_FILE" ]] && touch "$TODO_FILE" && echo "→ todo list started ($TODO_FILE)"
 
 new() {
     echo "→ $*" >>"$TODO_FILE"
