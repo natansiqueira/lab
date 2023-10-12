@@ -9,3 +9,9 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+  stk:
+    image: stklos/stklos:2.00
+    working_dir: /app
+    volumes:
+      - .:/app
+
